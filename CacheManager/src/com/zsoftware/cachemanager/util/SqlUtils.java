@@ -18,6 +18,12 @@ import com.zsoftware.cachemanager.processor.metadata.Metadata;
 public class SqlUtils {
 	private final static String	DEBUG_TAG	= "SqlUtils";
 
+	public static void execSQL(String sql , FileDbHelper sqlDataBase){
+		SQLiteDatabase writableDatabase = sqlDataBase.getWritableDatabase();
+		writableDatabase.execSQL(sql);
+		writableDatabase.close();
+	}
+	
 	public static void createTable(Metadata metadata, FileDbHelper sqlDataBase) {
 		SQLiteDatabase writableDatabase = sqlDataBase.getWritableDatabase();
 		String createTableSql = createTableSql(metadata);

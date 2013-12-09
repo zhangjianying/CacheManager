@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.zsoftware.cachemanager.dbhelper.FileDbHelper;
+import com.zsoftware.cachemanager.processor.DeleteProcessor;
 import com.zsoftware.cachemanager.processor.QueryProcessor;
 import com.zsoftware.cachemanager.processor.SaveProcessor;
 import com.zsoftware.cachemanager.processor.metadata.Metadata;
@@ -32,7 +33,13 @@ public class CacheManger {
 	public SaveProcessor save(Object obj) throws Exception {
 		Class clazz = obj.getClass();
 		checkHaveMetaData(clazz);
-		return new SaveProcessor(clazz, sqliteopenhelper).save(obj,clazz,
+		return new SaveProcessor(clazz, sqliteopenhelper).save(obj, clazz,
+				MetadataHashMap.get(clazz.getName()));
+	}
+
+	public DeleteProcessor delete(Class clazz) throws Exception {
+		checkHaveMetaData(clazz);
+		return new DeleteProcessor(clazz, sqliteopenhelper).delete(clazz,
 				MetadataHashMap.get(clazz.getName()));
 	}
 

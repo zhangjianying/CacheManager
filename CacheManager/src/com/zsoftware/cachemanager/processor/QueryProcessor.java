@@ -23,19 +23,21 @@ public class QueryProcessor<T> {
 
 	public QueryProcessor query(Class<T> clazz, Metadata metadata) {
 		_clazz = clazz;
-
 		sqlStringBuilder.append(String.format("select * from %s",
 				metadata.tableName));
-
 		this.metadata = metadata;
 		return this;
 	}
 
 	public QueryProcessor where(String expression, String... value) {
 		sqlStringBuilder.append(" where ");
-
 		expression = expression.replaceAll("\\?", "%s");
 		sqlStringBuilder.append(String.format(expression, value));
+		return this;
+	}
+
+	public QueryProcessor order(String expression) {
+		sqlStringBuilder.append(" order " + expression);
 		return this;
 	}
 
