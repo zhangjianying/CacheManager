@@ -55,6 +55,8 @@ public class CacheManger {
 			if (!SqlUtils.isExistTable(tableName, sqliteopenhelper)) {
 				Log.v(DEBUG_TAG, "表不存在需要创建表");
 				SqlUtils.createTable(metadata, sqliteopenhelper);
+				SqlUtils.createIndex(metadata, ClazzUtils.getIndexField(clazz),
+						sqliteopenhelper);
 			}
 
 			MetadataHashMap.put(clazz.getName(), metadata);

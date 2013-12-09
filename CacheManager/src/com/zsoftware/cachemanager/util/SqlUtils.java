@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,12 +19,39 @@ import com.zsoftware.cachemanager.processor.metadata.Metadata;
 public class SqlUtils {
 	private final static String	DEBUG_TAG	= "SqlUtils";
 
-	public static void execSQL(String sql , FileDbHelper sqlDataBase){
+	public static void execSQL(String sql, FileDbHelper sqlDataBase) {
 		SQLiteDatabase writableDatabase = sqlDataBase.getWritableDatabase();
 		writableDatabase.execSQL(sql);
 		writableDatabase.close();
 	}
-	
+
+	private static ArrayList<String> createIndexSql(Metadata metadata,
+			HashMap<String, Type> map) {
+		ArrayList<String> strSQLs = new ArrayList<String>();
+		String tableName = metadata.tableName;
+		String template = "create index %s_%s ON %s(%s)";
+		Iterator<String> iterator = map.keySet().iterator();
+		while (iterator.hasNext()) {
+			String fieldName = iterator.next();
+			String format = String.format(template, tableName, fieldName,
+					tableName, fieldName);
+			strSQLs.add(format);
+		}
+
+		return strSQLs;
+	}
+
+	public static void createIndex(Metadata metadata,
+			HashMap<String, Type> map, FileDbHelper sqlDataBase) {
+		SQLiteDatabase writableDatabase = sqlDataBase.getWritableDatabase();
+
+		ArrayList<String> createIndexSql = createIndexSql(metadata, map);
+		for (String createSQL : createIndexSql) {
+			writableDatabase.execSQL(createSQL);
+		}
+		writableDatabase.close();
+	}
+
 	public static void createTable(Metadata metadata, FileDbHelper sqlDataBase) {
 		SQLiteDatabase writableDatabase = sqlDataBase.getWritableDatabase();
 		String createTableSql = createTableSql(metadata);

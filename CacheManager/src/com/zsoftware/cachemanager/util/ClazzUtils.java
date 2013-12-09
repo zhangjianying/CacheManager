@@ -17,6 +17,22 @@ public class ClazzUtils {
 		throw new Exception("类未打标注");
 	}
 
+	public static HashMap<String, Type> getIndexField(Class<?> clazz) {
+
+		HashMap<String, Type> typs = new HashMap<String, Type>();
+		Field[] declaredFields = clazz.getDeclaredFields();
+		for (Field field : declaredFields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				Column annotation = field.getAnnotation(Column.class);
+				if (annotation.isIndex())
+					typs.put(field.getName(), annotation.type());
+			}
+
+		}
+
+		return typs;
+	}
+
 	public static HashMap<String, Type> getField(Class<?> clazz) {
 
 		HashMap<String, Type> typs = new HashMap<String, Type>();
@@ -39,7 +55,7 @@ public class ClazzUtils {
 		for (Field field : declaredFields) {
 			if (field.isAnnotationPresent(Column.class)) {
 				Column annotation = field.getAnnotation(Column.class);
-				//加密
+				// 加密
 				retVal.put(field.getName(), field.get(obj));
 			}
 
