@@ -1,7 +1,6 @@
 package com.zsoftware.cachemanager;
 
 import java.util.HashMap;
-import java.util.List;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -10,6 +9,7 @@ import com.zsoftware.cachemanager.dbhelper.FileDbHelper;
 import com.zsoftware.cachemanager.processor.DeleteProcessor;
 import com.zsoftware.cachemanager.processor.QueryProcessor;
 import com.zsoftware.cachemanager.processor.SaveProcessor;
+import com.zsoftware.cachemanager.processor.UpdateProcessor;
 import com.zsoftware.cachemanager.processor.metadata.Metadata;
 import com.zsoftware.cachemanager.util.ClazzUtils;
 import com.zsoftware.cachemanager.util.SqlUtils;
@@ -42,6 +42,14 @@ public class CacheManger {
 		return new DeleteProcessor(clazz, sqliteopenhelper).delete(clazz,
 				MetadataHashMap.get(clazz.getName()));
 	}
+	
+	public UpdateProcessor update(Class clazz) throws Exception {
+		    checkHaveMetaData(clazz);
+
+		    return new UpdateProcessor(clazz, this.sqliteopenhelper).update(clazz, 
+		      (Metadata)this.MetadataHashMap.get(clazz.getName()));
+	}
+
 
 	private void checkHaveMetaData(Class<?> clazz) throws Exception {
 		Log.v(DEBUG_TAG, "checkHaveMetaData");
